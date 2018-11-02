@@ -122,6 +122,16 @@
   <ItemGroup>
     <Content Include="Welcome.html" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cdb.Notifications\Cdb.Notifications.csproj">
+      <Project>{747b5869-abd5-4d28-9206-aed60367dceb}</Project>
+      <Name>Cdb.Notifications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cdb.Tickets\Cdb.Tickets.csproj">
+      <Project>{788e5a1c-158c-428c-8a1d-7cba805e67b8}</Project>
+      <Name>Cdb.Tickets</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -7,6 +7,7 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.Xpo;
 using DevExpress.ExpressApp.Xpo;
 using DevExpress.Persistent.BaseImpl;
+using Cdb.Tickets.BusinessObjects.DefaultClasses;
 
 namespace Tickets.Module.DatabaseUpdate {
     // For more typical usage scenarios, be sure to check out https://documentation.devexpress.com/eXpressAppFramework/clsDevExpressExpressAppUpdatingModuleUpdatertopic.aspx
@@ -16,14 +17,27 @@ namespace Tickets.Module.DatabaseUpdate {
         }
         public override void UpdateDatabaseAfterUpdateSchema() {
             base.UpdateDatabaseAfterUpdateSchema();
-            //string name = "MyName";
-            //DomainObject1 theObject = ObjectSpace.FindObject<DomainObject1>(CriteriaOperator.Parse("Name=?", name));
-            //if(theObject == null) {
-            //    theObject = ObjectSpace.CreateObject<DomainObject1>();
-            //    theObject.Name = name;
-            //}
 
-			//ObjectSpace.CommitChanges(); //Uncomment this line to persist created object(s).
+            CustomUserRole adminEmployeeRole = ObjectSpace.FindObject<CustomUserRole>(
+               new BinaryOperator("Name", "Admin"));
+            if (adminEmployeeRole == null)
+            {
+                adminEmployeeRole = ObjectSpace.CreateObject<CustomUserRole>();
+                adminEmployeeRole.Name = "Admin";
+                adminEmployeeRole.IsAdministrative = true;
+                adminEmployeeRole.Save();
+            }
+            CustomUser adminEmployee = ObjectSpace.FindObject<CustomUser>(
+                new BinaryOperator("UserName", "Admin"));
+            if (adminEmployee == null)
+            {
+                adminEmployee = ObjectSpace.CreateObject<CustomUser>();
+                adminEmployee.UserName = "Admin";
+                adminEmployee.SetPassword("");
+                adminEmployee.Roles.Add(adminEmployeeRole);
+            }
+
+            ObjectSpace.CommitChanges(); //Uncomment this line to persist created object(s).
         }
         public override void UpdateDatabaseBeforeUpdateSchema() {
             base.UpdateDatabaseBeforeUpdateSchema();

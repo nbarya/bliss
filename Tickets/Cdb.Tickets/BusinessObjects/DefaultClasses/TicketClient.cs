@@ -1,0 +1,36 @@
+﻿using Cdb.Tickets.BusinessObjects.DomainComponent;
+using DevExpress.Persistent.Base;
+using DevExpress.Persistent.Validation;
+using DevExpress.Xpo;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace Cdb.Tickets.BusinessObjects.DefaultClasses
+{
+    [NavigationItem("Ticket")]
+    [DefaultProperty("ClientName")]
+    public class TicketClient: XPObject, ITicketClient
+    {
+        public TicketClient() : base()
+        {
+            // This constructor is used when an object is loaded from a persistent storage.
+            // Do not place any code here.
+        }
+
+        public TicketClient(Session session) : base(session)
+        {
+            // This constructor is used when an object is loaded from a persistent storage.
+            // Do not place any code here.
+        }
+
+        public override void AfterConstruction()
+        {
+            base.AfterConstruction();
+            // Place here your initialization code.
+        }
+
+        [RuleRequiredField("RuleRequiredField for TicketClient.ClientName", DefaultContexts.Save)]
+        public string ClientName { get; set; }
+        public IList<ITicket> Tickets { get; }
+    }
+}

@@ -60,6 +60,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.ExpressApp.Security.v18.1, Version=18.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.ExpressApp.Xpo.v18.1">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -150,6 +151,8 @@
       <Name>System.Drawing</Name>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
       <Private>False</Private>
@@ -168,6 +171,7 @@
     <Compile Include="WinApplication.Designer.cs">
       <DependentUpon>WinApplication.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -202,6 +206,14 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cdb.Notifications\Cdb.Notifications.csproj">
+      <Project>{747B5869-ABD5-4D28-9206-AED60367DCEB}</Project>
+      <Name>Cdb.Notifications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cdb.Tickets\Cdb.Tickets.csproj">
+      <Project>{788E5A1C-158C-428C-8A1D-7CBA805E67B8}</Project>
+      <Name>Cdb.Tickets</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tickets.Module.Win\Tickets.Module.Win.csproj">
       <Project>{7964F87D-BC5D-4C4E-8B2F-71E89739AA97}</Project>
       <Name>Tickets.Module.Win</Name>

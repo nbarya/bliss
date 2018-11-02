@@ -28,6 +28,8 @@
             // 
             this.RequiredModuleTypes.Add(typeof(Tickets.Module.TicketsModule));
             this.RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Win.SystemModule.SystemWindowsFormsModule));
+            this.RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
+
         }
 
         #endregion

@@ -7,6 +7,8 @@ using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.Win;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl;
+using Cdb.Tickets.BusinessObjects.DefaultClasses;
+using DevExpress.ExpressApp.Security.Strategy;
 
 namespace Tickets.Win {
     static class Program {
@@ -42,6 +44,11 @@ namespace Tickets.Win {
             }
 #endif
             try {
+                //                
+                winApplication.Security =
+                    new SecurityStrategyComplex(typeof(CustomUser), typeof(CustomUserRole),
+                        new AuthenticationStandard());
+                //
                 winApplication.Setup();
                 winApplication.Start();
             }
