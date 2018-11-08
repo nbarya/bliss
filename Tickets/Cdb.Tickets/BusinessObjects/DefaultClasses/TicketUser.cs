@@ -1,23 +1,28 @@
 ﻿using Cdb.Tickets.BusinessObjects.DomainComponent;
+using DevExpress.ExpressApp.Security;
+using DevExpress.ExpressApp.Security.Strategy;
 using DevExpress.Persistent.Base;
-using DevExpress.Persistent.Validation;
 using DevExpress.Xpo;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Cdb.Tickets.BusinessObjects.DefaultClasses
 {
-    [NavigationItem("Ticket")]
-    [DefaultProperty("TicketTarget")]
-    public class TicketTarget: XPObject, ITicketTarget
+    [NavigationItem("TestUser")]
+    [DefaultProperty("TestUser.UserName")]
+    public class TicketUser : XPObject, ITicketUser
     {
-        public TicketTarget() : base()
+        public TicketUser() : base()
         {
             // This constructor is used when an object is loaded from a persistent storage.
             // Do not place any code here.
         }
 
-        public TicketTarget(Session session) : base(session)
+        public TicketUser(Session session) : base(session)
         {
             // This constructor is used when an object is loaded from a persistent storage.
             // Do not place any code here.
@@ -29,9 +34,7 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
             // Place here your initialization code.
         }
 
-        [RuleRequiredField("RuleRequiredField for TicketTarget.Target", DefaultContexts.Save)]
-        public string Target { get; set; }
-
-        public IList<ITicket> Tickets { get; }
+        public SecuritySystemUser TestUser { get; set; }
+        ISecurityUser ITicketUser.TestUser { get { return TestUser; } set { TestUser = (SecuritySystemUser)value; } }
     }
 }

@@ -19,7 +19,7 @@ namespace Cdb.Tickets.BusinessObjects.DomainComponent
         DateTime TicketDate { get; set; }
         DateTime ErrorDate { get; set; }
         ITicketSource Source { get; set; }
-        ITicketClient Client { get; set; }
+        ITicketTarget Target { get; set; }
         ITicketPriority Priority { get; set; }
         DateTime ReportDate { get; set; }
         DateTime SourceDate { get; set; }

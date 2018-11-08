@@ -14,7 +14,7 @@ namespace Cdb.Tickets.BusinessObjects.DomainComponent
     [DomainComponent]
     public interface ICustomUser : ISecurityUser, IAuthenticationStandardUser
         ,ISecurityUserWithRoles, IPermissionPolicyUser
-    {
+    {       
         // one-to-many Reporter-Tickets relationship
         IList<ITicket> ReporterTickets { get; }
         // one-to-many Assignee-Tickets relationship

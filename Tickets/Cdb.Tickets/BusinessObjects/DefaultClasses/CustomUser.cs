@@ -1,7 +1,9 @@
 ﻿using Cdb.Tickets.BusinessObjects.DomainComponent;
 using DevExpress.Data.Filtering;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Model;
 using DevExpress.ExpressApp.Security;
+using DevExpress.ExpressApp.Security.Strategy;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 using DevExpress.Xpo;
@@ -161,6 +163,6 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
                 return watchertickets;
             }
         }
-        //        
+        //                  
     }
 }

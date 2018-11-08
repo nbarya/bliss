@@ -41,32 +41,18 @@ namespace Cdb.Tickets.Controllers
 
         private void ObjectSpace_ObjectSaving(object sender, ObjectManipulatingEventArgs e)
         {
-            try
-            {
-                Ticket objTicket = (Ticket)e.Object;
-                if (ObjectSpace != null && objTicket != null)
-                    IsNewObject = ObjectSpace.IsNewObject(objTicket);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            Ticket objTicket = (Ticket)e.Object;
+            if (ObjectSpace != null && objTicket != null)
+                IsNewObject = ObjectSpace.IsNewObject(objTicket);
         }
 
         private void ObjectSpace_ObjectSaved(object sender, ObjectManipulatingEventArgs e)
         {
-            try
+            if (IsNewObject)
             {
-                if(IsNewObject)
-                {
-                    Ticket objTicket = (Ticket)e.Object;
-                    if (objTicket != null)
-                        SaveObjectNotificationTemplate(objTicket);
-                }                
-            }
-            catch (Exception ex)
-            {
-
+                Ticket objTicket = (Ticket)e.Object;
+                if (objTicket != null)
+                    SaveObjectNotificationTemplate(objTicket);
             }
         }
 
@@ -86,44 +72,38 @@ namespace Cdb.Tickets.Controllers
 
         private void SaveObjectNotificationTemplate(Ticket prm_objTicket)
         {
-            try
+            IsNewObject = false;//Clear flag
+
+            string strTicketType, strClient, strPriority;
+
+            IObjectNotificationDetails objNotDetl = (ObjectNotificationDetails)
+                ObjectSpace.CreateObject(typeof(ObjectNotificationDetails)) as IObjectNotificationDetails;
+            strTicketType = prm_objTicket.Type == null ? "" : prm_objTicket.Type.Ticket_Type;
+            strClient = prm_objTicket.Client == null ? "" : prm_objTicket.Client.ClientName;
+            strPriority = prm_objTicket.Priority == null ? "" : prm_objTicket.Priority.Ticket_Priority;
+
+            objNotDetl.ObjectOid = prm_objTicket.Oid;
+            objNotDetl.ObjectType = prm_objTicket.GetType().ToString();
+
+            objNotDetl.TemplateForSave = "Ticket Created!" + "Ticket Type: " +
+                strTicketType + ", Client: " + strClient + ", Priority: " + strPriority + " is created on " + DateTime.Now;
+
+            objNotDetl.TemplateForUpdate = "Ticket Updated!" + "Ticket Type: " + strTicketType + ", Client: " + strClient +
+           ", Priority: " + strPriority + " has been updated on " + System.DateTime.Now;
+
+            objNotDetl.TemplateForDelete = "Ticket Deleted!" + "Ticket Type: " + strTicketType + ", Client: " + strClient +
+           ", Priority: " + strPriority + " has been deleted on " + System.DateTime.Now;
+
+            //Get All user ids (except the posting user) 
+
+            if (prm_objTicket.Assignee != null)
+                objNotDetl.UsersToSendEmail = prm_objTicket.Assignee.Oid.ToString();
+            foreach (CustomUser watcher in prm_objTicket.Watchers)
             {
-                IsNewObject = false;//Clear flag
-
-                string strTicketType, strClient, strPriority;
-
-                IObjectNotificationDetails objNotDetl = (ObjectNotificationDetails)
-                    ObjectSpace.CreateObject(typeof(ObjectNotificationDetails)) as IObjectNotificationDetails;
-                strTicketType = prm_objTicket.Type == null ? "" : prm_objTicket.Type.Ticket_Type;
-                strClient = prm_objTicket.Client == null ? "" : prm_objTicket.Client.ClientName;
-                strPriority = prm_objTicket.Priority == null ? "" : prm_objTicket.Priority.Ticket_Priority;
-
-                objNotDetl.ObjectOid = prm_objTicket.Oid;
-                objNotDetl.ObjectType = prm_objTicket.GetType().ToString();
-
-                objNotDetl.TemplateForSave = "Ticket Created!" + "Ticket Type: " +
-                    strTicketType + ", Client: " + strClient + ", Priority: " + strPriority + " is created on " + DateTime.Now;
-
-                objNotDetl.TemplateForUpdate = "Ticket Updated!" + "Ticket Type: " + strTicketType + ", Client: " + strClient +
-               ", Priority: " + strPriority + " has been updated on " + System.DateTime.Now;
-
-                objNotDetl.TemplateForDelete = "Ticket Deleted!" + "Ticket Type: " + strTicketType + ", Client: " + strClient +
-               ", Priority: " + strPriority + " has been deleted on " + System.DateTime.Now;
-
-                //Get All user ids (except the posting user) 
-
-                if (prm_objTicket.Assignee != null)
-                    objNotDetl.UsersToSendEmail = prm_objTicket.Assignee.Oid.ToString();
-                foreach (CustomUser watcher in prm_objTicket.Watchers)
-                {
-                    objNotDetl.UsersToSendEmail += "|" + watcher.Oid.ToString();
-                }
-
-                ObjectSpace.CommitChanges();
+                objNotDetl.UsersToSendEmail += "|" + watcher.Oid.ToString();
             }
-            catch (Exception ex)
-            {
-            }
+
+            ObjectSpace.CommitChanges();
         }
     }
 }

@@ -69,27 +69,20 @@ namespace Cdb.Notifications.BusinessObjects.Classes
 
         public static bool SendEmail_Notification(string prm_strUserEmail, string prm_strMessage)
         {
-            try
-            {
-                MailMessage mail = new MailMessage("yourEmail@gmail.com", prm_strUserEmail);
-                SmtpClient client = new SmtpClient();
-                client.Credentials = new System.Net.NetworkCredential("yourEmail@gmail.com", "yourqert123");
-                client.Port = 25;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Host = "smtp.gmail.com";
-                client.EnableSsl = true;
-                mail.Subject = prm_strMessage.Substring(0, 10);
-                mail.Body = prm_strMessage;
-                //uncomment below line to send email//
-                //client.Send(mail);
+            MailMessage mail = new MailMessage("yourEmail@gmail.com", prm_strUserEmail);
+            SmtpClient client = new SmtpClient();
+            client.Credentials = new System.Net.NetworkCredential("yourEmail@gmail.com", "yourqert123");
+            client.Port = 25;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Host = "smtp.gmail.com";
+            client.EnableSsl = true;
+            mail.Subject = prm_strMessage.Substring(0, 10);
+            mail.Body = prm_strMessage;
+            //uncomment below line to send email//
+            //client.Send(mail);
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return true;
         }
     }
 }

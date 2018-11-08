@@ -44,6 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.ExpressApp.Security.v18.1, Version=18.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.ExpressApp.Xpo.v18.1">
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -88,7 +89,6 @@
     <Compile Include="BusinessObjects\DefaultClasses\GenericCollection.cs" />
     <Compile Include="BusinessObjects\DefaultClasses\ObjectNotificationDetails.cs" />
     <Compile Include="BusinessObjects\DefaultClasses\Ticket.cs" />
-    <Compile Include="BusinessObjects\DefaultClasses\TicketClient.cs" />
     <Compile Include="BusinessObjects\DefaultClasses\TicketComment.cs" />
     <Compile Include="BusinessObjects\DefaultClasses\TicketPriority.cs" />
     <Compile Include="BusinessObjects\DefaultClasses\TicketSource.cs" />
@@ -98,25 +98,12 @@
     <Compile Include="BusinessObjects\DomainComponent\ICustomUser.cs" />
     <Compile Include="BusinessObjects\DomainComponent\IObjectNotificationDetails.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicket.cs" />
-    <Compile Include="BusinessObjects\DomainComponent\ITicketClient.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketComment.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketPriority.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketSource.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketState.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketTarget.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketType.cs" />
-    <Compile Include="Controllers\CommentController.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controllers\CommentController.Designer.cs">
-      <DependentUpon>CommentController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controllers\TicketController.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controllers\TicketController.Designer.cs">
-      <DependentUpon>TicketController.cs</DependentUpon>
-    </Compile>
     <Compile Include="DatabaseUpdate\Updater.cs" />
     <Compile Include="Module.cs">
       <SubType>Component</SubType>

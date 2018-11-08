@@ -1,4 +1,5 @@
 ﻿using Cdb.Tickets.BusinessObjects.DomainComponent;
+using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Model;
@@ -43,7 +44,13 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
             ErrorDate = DateTime.Now;
             ReportDate = DateTime.Now;
             SourceDate = DateTime.Now;
-
+            if (SecuritySystem.CurrentUser != null)
+            {
+                CustomUser user = Session.GetObjectByKey<CustomUser>(SecuritySystem.CurrentUserId);
+                //set current user // Reporter = 
+                Reporter = user;
+                Priority= Session.FindObject<TicketPriority>(CriteriaOperator.Parse("Ticket_Priority = 'High'"));
+            }
         }
 
         [RuleRequiredField("RuleRequiredField for Ticket.Reporter", DefaultContexts.Save)]
@@ -64,8 +71,8 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
         public TicketSource Source { get; set; }
         ITicketSource ITicket.Source { get { return Source; } set { Source = (TicketSource)value; } }
 
-        public TicketClient Client { get; set; }
-        ITicketClient ITicket.Client { get { return Client; } set { Client = (TicketClient)value; } }
+        public TicketTarget Target { get; set; }
+        ITicketTarget ITicket.Target { get { return Target; } set { Target = (TicketTarget)value; } }
 
         public TicketPriority Priority { get; set; }
         ITicketPriority ITicket.Priority { get { return Priority; } set { Priority = (TicketPriority)value; } }

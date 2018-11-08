@@ -41,32 +41,18 @@ namespace Cdb.Tickets.Controllers
 
         private void ObjectSpace_ObjectSaving(object sender, ObjectManipulatingEventArgs e)
         {
-            try
-            {
-                TicketComment objTicket = (TicketComment)e.Object;
-                if (ObjectSpace != null && objTicket != null)
-                    IsNewObject = ObjectSpace.IsNewObject(objTicket);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            TicketComment objTicket = (TicketComment)e.Object;
+            if (ObjectSpace != null && objTicket != null)
+                IsNewObject = ObjectSpace.IsNewObject(objTicket);
         }
 
         private void ObjectSpace_ObjectSaved(object sender, ObjectManipulatingEventArgs e)
         {
-            try
+            if (IsNewObject)
             {
-                if (IsNewObject)
-                {
-                    TicketComment objTicketCmnt = (TicketComment)e.Object;
-                    if (objTicketCmnt != null)
-                        SaveObjectNotificationTemplate(objTicketCmnt);
-                }
-            }
-            catch (Exception ex)
-            {
-
+                TicketComment objTicketCmnt = (TicketComment)e.Object;
+                if (objTicketCmnt != null)
+                    SaveObjectNotificationTemplate(objTicketCmnt);
             }
         }
 
@@ -83,45 +69,39 @@ namespace Cdb.Tickets.Controllers
 
         private void SaveObjectNotificationTemplate(TicketComment prm_objTicketCmnt)
         {
-            try
+            IsNewObject = false;//Clear flag
+            if (prm_objTicketCmnt.Oid > 0)
             {
-                IsNewObject = false;//Clear flag
-                if (prm_objTicketCmnt.Oid > 0)
+                string strCommentedby, strTicketType, strClient;
+
+                IObjectNotificationDetails objNotDetl = (ObjectNotificationDetails)
+                    ObjectSpace.CreateObject(typeof(ObjectNotificationDetails)) as IObjectNotificationDetails;
+                strTicketType = prm_objTicketCmnt.Ticket.Type == null ? "" : prm_objTicketCmnt.Ticket.Type.Ticket_Type;
+                strClient = prm_objTicketCmnt.Ticket.Client == null ? "" : prm_objTicketCmnt.Ticket.Client.ClientName;
+                strCommentedby = prm_objTicketCmnt.CommentedBy == null ? "" : prm_objTicketCmnt.CommentedBy.UserName;
+
+                objNotDetl.ObjectOid = prm_objTicketCmnt.Oid;
+                objNotDetl.ObjectType = prm_objTicketCmnt.GetType().ToString();
+
+                objNotDetl.TemplateForSave = "Ticket Commented!" + strCommentedby + " has commented on Ticket, Ticket Type: "
+                + strTicketType + ", Client: " + strClient;
+
+                objNotDetl.TemplateForUpdate = "Ticket Comment Edited!" + strCommentedby + " has edited the comment on Ticket, Ticket Type: "
+               + strTicketType + ", Client: " + strClient;
+
+                objNotDetl.TemplateForDelete = "Ticket Comment Deleted!" + strCommentedby + " has deleted the comment on Ticket, Ticket Type: "
+               + strTicketType + ", Client: " + strClient;
+
+                //Get All user ids (except the posting user) 
+
+                if (prm_objTicketCmnt.Ticket.Assignee != null)
+                    objNotDetl.UsersToSendEmail = prm_objTicketCmnt.Ticket.Assignee.Oid.ToString();
+                foreach (CustomUser watcher in prm_objTicketCmnt.Ticket.Watchers)
                 {
-                    string strCommentedby, strTicketType, strClient;
-
-                    IObjectNotificationDetails objNotDetl = (ObjectNotificationDetails)
-                        ObjectSpace.CreateObject(typeof(ObjectNotificationDetails)) as IObjectNotificationDetails;
-                    strTicketType = prm_objTicketCmnt.Ticket.Type == null ? "" : prm_objTicketCmnt.Ticket.Type.Ticket_Type;
-                    strClient = prm_objTicketCmnt.Ticket.Client == null ? "" : prm_objTicketCmnt.Ticket.Client.ClientName;
-                    strCommentedby = prm_objTicketCmnt.CommentedBy == null ? "" : prm_objTicketCmnt.CommentedBy.UserName;
-
-                    objNotDetl.ObjectOid = prm_objTicketCmnt.Oid;
-                    objNotDetl.ObjectType = prm_objTicketCmnt.GetType().ToString();
-
-                    objNotDetl.TemplateForSave = "Ticket Commented!" + strCommentedby + " has commented on Ticket, Ticket Type: "
-                    + strTicketType + ", Client: " + strClient;
-
-                    objNotDetl.TemplateForUpdate = "Ticket Comment Edited!" + strCommentedby + " has edited the comment on Ticket, Ticket Type: "
-                   + strTicketType + ", Client: " + strClient;
-
-                    objNotDetl.TemplateForDelete = "Ticket Comment Deleted!" + strCommentedby + " has deleted the comment on Ticket, Ticket Type: "
-                   + strTicketType + ", Client: " + strClient;
-
-                    //Get All user ids (except the posting user) 
-
-                    if (prm_objTicketCmnt.Ticket.Assignee != null)
-                        objNotDetl.UsersToSendEmail = prm_objTicketCmnt.Ticket.Assignee.Oid.ToString();
-                    foreach (CustomUser watcher in prm_objTicketCmnt.Ticket.Watchers)
-                    {
-                        objNotDetl.UsersToSendEmail += "|" + watcher.Oid.ToString();
-                    }
-
-                    ObjectSpace.CommitChanges();
+                    objNotDetl.UsersToSendEmail += "|" + watcher.Oid.ToString();
                 }
-            }
-            catch (Exception ex)
-            {
+
+                ObjectSpace.CommitChanges();
             }
         }
     }
