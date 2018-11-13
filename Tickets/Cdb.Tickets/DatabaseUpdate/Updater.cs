@@ -7,15 +7,37 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.Xpo;
 using DevExpress.ExpressApp.Xpo;
 using DevExpress.Persistent.BaseImpl;
+using Cdb.Tickets.BusinessObjects.DomainComponent;
 
 namespace Cdb.Tickets.DatabaseUpdate {
     // For more typical usage scenarios, be sure to check out https://documentation.devexpress.com/eXpressAppFramework/clsDevExpressExpressAppUpdatingModuleUpdatertopic.aspx
     public class Updater : ModuleUpdater {
-        public Updater(IObjectSpace objectSpace, Version currentDBVersion) :
+
+        TicketsModule module;
+
+        public Updater(IObjectSpace objectSpace, Version currentDBVersion, TicketsModule module) :
             base(objectSpace, currentDBVersion) {
+            this.module = module;
         }
         public override void UpdateDatabaseAfterUpdateSchema() {
             base.UpdateDatabaseAfterUpdateSchema();
+
+            // class which will be used for ticket-type
+            Type dataType = module.TicketTypeDataType;
+
+            foreach (string name in new[] { "Task", "Idea", "Error" })
+            {
+                ITicketType type = null;
+                type = ObjectSpace.FindObject(dataType, new BinaryOperator(nameof(type.Ticket_Type), name)) as ITicketType;
+                if (type == null)
+                {
+                    type = ObjectSpace.CreateObject(dataType) as ITicketType;
+                    type.Ticket_Type = name;
+                }
+            }
+
+            ObjectSpace.CommitChanges();
+
             //string name = "MyName";
             //DomainObject1 theObject = ObjectSpace.FindObject<DomainObject1>(CriteriaOperator.Parse("Name=?", name));
             //if(theObject == null) {
@@ -23,7 +45,7 @@ namespace Cdb.Tickets.DatabaseUpdate {
             //    theObject.Name = name;
             //}
 
-			//ObjectSpace.CommitChanges(); //Uncomment this line to persist created object(s).
+            //ObjectSpace.CommitChanges(); //Uncomment this line to persist created object(s).
         }
         public override void UpdateDatabaseBeforeUpdateSchema() {
             base.UpdateDatabaseBeforeUpdateSchema();

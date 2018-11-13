@@ -25,9 +25,9 @@ namespace Tickets.Module {
             InitializeComponent();
 			BaseObject.OidInitializationMode = OidInitializationMode.AfterConstruction;
             //Add Tickets Module//
-            RequiredModuleTypes.Add(typeof(Cdb.Tickets.TicketsModule));
+           // RequiredModuleTypes.Add(typeof(Cdb.Tickets.TicketsModule));
             //Add Notifications Module//
-            RequiredModuleTypes.Add(typeof(Cdb.Notifications.NotificationsModule));
+           // RequiredModuleTypes.Add(typeof(Cdb.Notifications.NotificationsModule));
         }
         public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
             ModuleUpdater updater = new DatabaseUpdate.Updater(objectSpace, versionFromDB);

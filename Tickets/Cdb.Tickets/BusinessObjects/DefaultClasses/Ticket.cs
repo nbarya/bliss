@@ -47,9 +47,9 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
             if (SecuritySystem.CurrentUser != null)
             {
                 CustomUser user = Session.GetObjectByKey<CustomUser>(SecuritySystem.CurrentUserId);
-                //set current user // Reporter = 
                 Reporter = user;
-                Priority= Session.FindObject<TicketPriority>(CriteriaOperator.Parse("Ticket_Priority = 'High'"));
+                Priority = 
+                    (TicketPriority)Session.FindObject(typeof(TicketPriority), CriteriaOperator.Parse("Ticket_Priority = 'High'"));
             }
         }
 
