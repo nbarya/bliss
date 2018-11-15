@@ -37,25 +37,30 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
         public override void AfterConstruction()
         {
             base.AfterConstruction();
-            // Place here your initialization code.
+            // Place here your initialization code. 
 
             //Set current date
             TicketDate = DateTime.Now;
             ErrorDate = DateTime.Now;
             ReportDate = DateTime.Now;
             SourceDate = DateTime.Now;
+
             if (SecuritySystem.CurrentUser != null)
             {
+                //////////
+                //initialize with the current user
                 CustomUser user = Session.GetObjectByKey<CustomUser>(SecuritySystem.CurrentUserId);
                 Reporter = user;
-                Priority = 
-                    (TicketPriority)Session.FindObject(typeof(TicketPriority), CriteriaOperator.Parse("Ticket_Priority = 'High'"));
+                //////////
+                //initialize with the first priority
+                Type typeofPriority = TicketsModule.FindDefaultTicketPriorityDataType();
+                Priority =
+                   Session.FindObject(typeofPriority, CriteriaOperator.Parse("Ticket_Priority = 'High'")) as TicketPriority;
             }
         }
-
-        [RuleRequiredField("RuleRequiredField for Ticket.Reporter", DefaultContexts.Save)]
+                
         [Association("Reporter-Tickets")]
-        [BackReferenceProperty("ReporterTickets")]
+        //[BackReferenceProperty("ReporterTickets")]
         public CustomUser Reporter { get; set; }
         ICustomUser ITicket.Reporter { get { return Reporter; } set { Reporter = (CustomUser)value; } }
 
@@ -80,16 +85,13 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
         [ModelDefault("AllowEdit", "False")]
         public DateTime ReportDate { get; set; }
         public DateTime SourceDate { get; set; }
-
-        [RuleRequiredField("RuleRequiredField for Ticket.Assignee", DefaultContexts.Save)]
-        [Association("Assignee-Tickets")]
-        [BackReferenceProperty("AssigneeTickets")]
+                
+        [Association("Assignee-Tickets")]       
         public CustomUser Assignee { get; set; }
         ICustomUser ITicket.Assignee { get { return Assignee; } set { Assignee = (CustomUser)value; } }
 
         // many-to-many Watchers-Tickets relationship
-        [Association("Watchers-Tickets")]
-        [BackReferenceProperty("WatcherTickets")]
+        [Association("Watchers-Tickets")]        
         public XPCollection<CustomUser> Watchers
         {
             get { return GetCollection<CustomUser>(nameof(Watchers)); }

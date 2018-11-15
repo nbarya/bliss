@@ -27,8 +27,7 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
             base.AfterConstruction();
             // Place here your initialization code.
         }
-
-        [RuleRequiredField("RuleRequiredField for TicketState.Ticket_State", DefaultContexts.Save)]
+                
         public string Ticket_State { get; set; }
     }
 }

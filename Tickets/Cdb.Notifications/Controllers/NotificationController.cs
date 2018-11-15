@@ -78,60 +78,60 @@ namespace Cdb.Notifications.Controllers
         //Saved
         private void ObjectSpace_ObjectSaved(object sender, ObjectManipulatingEventArgs e)
         {
-            NotificationObjects objNotifyCur = module.NotificationObjects.Find(obj => obj.ObjectType == e.Object.GetType());
+            //NotificationObjects objNotifyCur = module.NotificationObjects.Find(obj => obj.ObjectType == e.Object.GetType());
 
-            if (objNotifyCur != null)
-            {
-                CriteriaOperator criteria = CriteriaOperator.Parse(objNotifyCur.ObjectCriteria);
-                bool? matchCriteria = ObjectSpace.IsObjectFitForCriteria(objNotifyCur.ObjectType, e.Object, criteria);
-                if (matchCriteria == true)
-                {
-                    //Get Emails//                       
-                    int intOid = (int)View.ObjectSpace.GetKeyValue(View.CurrentObject);
-                    ObjectNotificationDetails objNotfDtl = ObjectSpace.GetObjects<ObjectNotificationDetails>().Where(
-                        not => not.ObjectType == objNotifyCur.ObjectType.ToString() && not.ObjectOid == intOid).FirstOrDefault();
-                    List<int> lstUserIds = objNotfDtl.UsersToSendEmail.Split('|').Select(Int32.Parse).ToList();
-                    lstEmails = ObjectSpace.GetObjects<NotificationUser>().Where(nu => lstUserIds.Contains(nu.Oid)).
-                        Select(usr => usr.Email).ToList();
+            //if (objNotifyCur != null)
+            //{
+            //    CriteriaOperator criteria = CriteriaOperator.Parse(objNotifyCur.ObjectCriteria);
+            //    bool? matchCriteria = ObjectSpace.IsObjectFitForCriteria(objNotifyCur.ObjectType, e.Object, criteria);
+            //    if (matchCriteria == true)
+            //    {
+            //        //Get Emails//                       
+            //        int intOid = (int)View.ObjectSpace.GetKeyValue(View.CurrentObject);
+            //        ObjectNotificationDetails objNotfDtl = ObjectSpace.GetObjects<ObjectNotificationDetails>().Where(
+            //            not => not.ObjectType == objNotifyCur.ObjectType.ToString() && not.ObjectOid == intOid).FirstOrDefault();
+            //        List<int> lstUserIds = objNotfDtl.UsersToSendEmail.Split('|').Select(Int32.Parse).ToList();
+            //        lstEmails = ObjectSpace.GetObjects<NotificationUser>().Where(nu => lstUserIds.Contains(nu.Oid)).
+            //            Select(usr => usr.Email).ToList();
 
-                    List<INotification> lstNotification = new List<INotification>();
-                    if (lstEmails.Count > 0)
-                    {
-                        if (objNotifyCur.IsNotificationForDeletion && IsDeleted)//Deletion
-                        {
-                            lstNotification = Notification.SendNotification(lstEmails, objNotfDtl.TemplateForDelete);
-                        }
-                        else
-                        {
-                            if (objNotifyCur.IsNotificationForCreation && IsNewObject)//Creation
-                            {
-                                lstNotification = Notification.SendNotification(lstEmails, objNotfDtl.TemplateForSave);
-                            }
-                            if (objNotifyCur.IsNotificationForUpdation && !IsNewObject)//Updation
-                            {
-                                lstNotification = Notification.SendNotification(lstEmails, objNotfDtl.TemplateForUpdate);
-                            }
-                        }
+            //        List<INotification> lstNotification = new List<INotification>();
+            //        if (lstEmails.Count > 0)
+            //        {
+            //            if (objNotifyCur.IsNotificationForDeletion && IsDeleted)//Deletion
+            //            {
+            //                lstNotification = Notification.SendNotification(lstEmails, objNotfDtl.TemplateForDelete);
+            //            }
+            //            else
+            //            {
+            //                if (objNotifyCur.IsNotificationForCreation && IsNewObject)//Creation
+            //                {
+            //                    lstNotification = Notification.SendNotification(lstEmails, objNotfDtl.TemplateForSave);
+            //                }
+            //                if (objNotifyCur.IsNotificationForUpdation && !IsNewObject)//Updation
+            //                {
+            //                    lstNotification = Notification.SendNotification(lstEmails, objNotfDtl.TemplateForUpdate);
+            //                }
+            //            }
 
-                        //Update Notification table//
-                        INotification objNotification;
-                        foreach (Notification objNot in lstNotification)
-                        {
-                            //ObjectSpace.CreateObject(commentType) as IComment;
-                            IObjectSpace objObSpc = Application.CreateObjectSpace();
-                            objNotification = (Notification)objObSpc.CreateObject(typeof(Notification)) as INotification;
-                            objNotification.Email = objNot.Email;
-                            objNotification.NotificationType = objNot.NotificationType;
-                            objNotification.EmailDate = objNot.EmailDate;
-                            objNotification.Message = objNot.Message;
-                            objNotification.Status = objNot.Status;
-                            objObSpc.CommitChanges();
-                        }
+            //            //Update Notification table//
+            //            INotification objNotification;
+            //            foreach (Notification objNot in lstNotification)
+            //            {
+            //                //ObjectSpace.CreateObject(commentType) as IComment;
+            //                IObjectSpace objObSpc = Application.CreateObjectSpace();
+            //                objNotification = (Notification)objObSpc.CreateObject(typeof(Notification)) as INotification;
+            //                objNotification.Email = objNot.Email;
+            //                objNotification.NotificationType = objNot.NotificationType;
+            //                objNotification.EmailDate = objNot.EmailDate;
+            //                objNotification.Message = objNot.Message;
+            //                objNotification.Status = objNot.Status;
+            //                objObSpc.CommitChanges();
+            //            }
 
-                        lstEmails = new List<string>();
-                    }
-                }
-            }
+            //            lstEmails = new List<string>();
+            //        }
+            //    }
+            //}
         }
         //
         #endregion

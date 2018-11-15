@@ -22,7 +22,7 @@ namespace Cdb.Tickets.DatabaseUpdate {
         public override void UpdateDatabaseAfterUpdateSchema() {
             base.UpdateDatabaseAfterUpdateSchema();
 
-            // class which will be used for ticket-type
+            // Ticket Type//
             Type dataType = module.TicketTypeDataType;
 
             foreach (string name in new[] { "Task", "Idea", "Error" })
@@ -33,6 +33,23 @@ namespace Cdb.Tickets.DatabaseUpdate {
                 {
                     type = ObjectSpace.CreateObject(dataType) as ITicketType;
                     type.Ticket_Type = name;
+                }
+            }
+
+            ObjectSpace.CommitChanges();
+
+            //Ticket Priority//
+            Type dtTypeTicketPriority = module.TicketPriorityDataType;
+
+            foreach (string name in new[] { "High", "Medium", "Low" })
+            {
+                ITicketPriority typePriority = null;
+                typePriority = 
+                    ObjectSpace.FindObject(dtTypeTicketPriority, new BinaryOperator(nameof(typePriority.Ticket_Priority), name)) as ITicketPriority;
+                if (typePriority == null)
+                {
+                    typePriority = ObjectSpace.CreateObject(dtTypeTicketPriority) as ITicketPriority;
+                    typePriority.Ticket_Priority = name;
                 }
             }
 

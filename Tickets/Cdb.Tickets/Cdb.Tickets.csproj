@@ -104,6 +104,12 @@
     <Compile Include="BusinessObjects\DomainComponent\ITicketState.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketTarget.cs" />
     <Compile Include="BusinessObjects\DomainComponent\ITicketType.cs" />
+    <Compile Include="Controllers\TicketController.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controllers\TicketController.Designer.cs">
+      <DependentUpon>TicketController.cs</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseUpdate\Updater.cs" />
     <Compile Include="Module.cs">
       <SubType>Component</SubType>
@@ -114,6 +120,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controllers\TicketController.resx">
+      <DependentUpon>TicketController.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
     <EmbeddedResource Include="Module.resx">
       <SubType>Designer</SubType>

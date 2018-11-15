@@ -39,8 +39,7 @@ namespace Cdb.Tickets.BusinessObjects.DefaultClasses
                 CommentedBy = user;
             }
         }
-
-        [RuleRequiredField("RuleRequiredField for TicketComment.Comments", DefaultContexts.Save)]
+                
         [Size(SizeAttribute.Unlimited)]
         public string Comments { get; set; }
 
